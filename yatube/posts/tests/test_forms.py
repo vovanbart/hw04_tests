@@ -58,8 +58,12 @@ class PostFormTest(TestCase):
             follow=True,
         )
 
+        kwargs_post = {
+            'username': self.user.username,
+        }
+
         self.assertRedirects(response, reverse('posts:profile',
-                                               kwargs={'username': self.user.username}))
+                                               kwargs=kwargs_post))
         self.assertEqual(Post.objects.count(), posts_count + 1)
 
     def test_create_posts(self):
@@ -76,6 +80,9 @@ class PostFormTest(TestCase):
             follow=True,
         )
 
+        kwargs_post = {'post_id': 1}
+        self.assertRedirects(response,
+                             reverse('posts:post_detail', kwargs=kwargs_post))
         self.assertEqual(Post.objects.get(id=post_id).text, post_data['text'])
         self.assertEqual(Post.objects.get(id=post_id).group.id,
                          post_data['group'])
