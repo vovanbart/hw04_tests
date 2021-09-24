@@ -51,7 +51,7 @@ class PostURLTests(TestCase):
                 else:
                     self.assertEqual(
                         response.status_code,
-                        HTTPStatus,
+                        HTTPStatus.OK,
                         f'Адресс {adress} не доступен.')
 
     def test_edit_author_post(self):
