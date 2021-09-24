@@ -80,9 +80,10 @@ class PostFormTest(TestCase):
             follow=True,
         )
 
+        id_post = Post.objects.get(id=post_id)
         kwargs_post = {'post_id': 1}
         self.assertRedirects(response,
                              reverse('posts:post_detail', kwargs=kwargs_post))
-        self.assertEqual(Post.objects.get(id=post_id).text, post_data['text'])
-        self.assertEqual(Post.objects.get(id=post_id).group.id,
+        self.assertEqual(id_post.text, post_data['text'])
+        self.assertEqual(id_post.group.id,
                          post_data['group'])
