@@ -9,16 +9,13 @@ class PostPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # создаём автора
         cls.user = User.objects.create(
             username='auth'
         )
-        # создаём группу
         cls.group = Group.objects.create(
             title='Тестовая группа',
             slug='test_slug',
         )
-        # создаём пост
         cls.post = Post.objects.create(
             text='Тестовый текст',
             author=cls.user,
@@ -26,18 +23,13 @@ class PostPagesTests(TestCase):
         )
 
     def setUp(self):
-        # Создаем неавторизованный клиент
         self.guest_client = Client()
-        # Создаем пользователя
         self.user = PostPagesTests.user
-        # Создаем второй клиент
         self.authorized_client = Client()
-        # Авторизуем пользователя
         self.authorized_client.force_login(self.user)
 
     def test_pages_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
-        # Собираем в словарь пары "имя_html_шаблона: reverse(name)"
         templates_pages_names = {
             reverse('posts:index'): 'posts/index.html',
             reverse('posts:group_list',
@@ -51,8 +43,6 @@ class PostPagesTests(TestCase):
             reverse('posts:post_edit',
                     kwargs={'post_id': self.post.id}): 'posts/create_post.html'
         }
-        # Проверяем, что при обращении к name
-        # вызывается соответствующий HTML-шаблон
         for reverse_name, template in templates_pages_names.items():
             with self.subTest(reverse_name=reverse_name):
                 response = self.authorized_client.get(reverse_name)
@@ -61,12 +51,7 @@ class PostPagesTests(TestCase):
     def test_index_list_page_show_correct_context(self):
         """Шаблон index сформирован с правильным контекстом."""
         response = self.authorized_client.get(reverse('posts:index'))
-        response_text = response.context['page_obj'][0].text
-        response_author = response.context['page_obj'][0].author
-        response_group = response.context['page_obj'][0].group
-        self.assertEqual(response_text, 'Тестовый текст')
-        self.assertEqual(response_author.username, 'auth')
-        self.assertEqual(response_group.title, 'Тестовая группа')
+        self.check_context_contains_page_or_post(response.context)
 
     def test_post_on_the_home_page(self):
         """ Тест на появление поста на главной странице после создания """
@@ -114,6 +99,14 @@ class PostPagesTests(TestCase):
         self.assertIn(self.post, posts, (
             ' Пост автора не отображается на странице автора '
         ))
+
+    def check_context_contains_page(self, context):
+        self.assertIn('page', context)
+        post = context['page'][0]
+        self.assertEqual(post.author, PostPagesTests.user)
+        self.assertEqual(post.text, 'Тестовый текст')
+        self.assertEqual(post.username, 'auth')
+        self.assertEqual(post.title, 'Тестовая группа')
 
 
 class PaginatorViewsTest(TestCase):

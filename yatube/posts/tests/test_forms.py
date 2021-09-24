@@ -66,7 +66,7 @@ class PostFormTest(TestCase):
                                                kwargs=kwargs_post))
         self.assertEqual(Post.objects.count(), posts_count + 1)
 
-    def test_create_posts(self):
+    def test_edit_posts(self):
         """Валидная форма изменяет запись в Post"""
         post_id = PostFormTest.post.id
         post_data = {
