@@ -51,7 +51,7 @@ class PostPagesTests(TestCase):
     def test_index_list_page_show_correct_context(self):
         """Шаблон index сформирован с правильным контекстом."""
         response = self.authorized_client.get(reverse('posts:index'))
-        self.check_context_contains_page('posts:index', response.context)
+        self.check_context_contains_page(response.context)
 
     def test_post_on_the_home_page(self):
         """ Тест на появление поста на главной странице после создания """
@@ -100,9 +100,9 @@ class PostPagesTests(TestCase):
             ' Пост автора не отображается на странице автора '
         ))
 
-    def check_context_contains_page(self, page, context):
-        self.assertIn(page, context)
-        post = context[page][0]
+    def check_context_contains_page(self, context):
+        self.assertIn('posts:index', context)
+        post = context['posts:index'][0]
         self.assertEqual(post.author, PostPagesTests.user)
         self.assertEqual(post.text, 'Тестовый текст')
         self.assertEqual(post.username, 'auth')
