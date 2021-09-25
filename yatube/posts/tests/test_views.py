@@ -105,7 +105,6 @@ class PostPagesTests(TestCase):
         post = context['page_obj'][0]
         self.assertEqual(post.author, PostPagesTests.user)
         self.assertEqual(post.text, 'Тестовый текст')
-        self.assertEqual(post.user.username, 'auth')
         self.assertEqual(post.title, 'Тестовая группа')
 
 
