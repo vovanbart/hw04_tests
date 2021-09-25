@@ -46,7 +46,7 @@ class PostURLTests(TestCase):
                 if adress in authorized_adress:
                     self.assertEqual(
                         response.status_code,
-                        302,
+                        HTTPStatus.FOUND,
                         f'Адресс {adress} не доступен.')
                 else:
                     self.assertEqual(
