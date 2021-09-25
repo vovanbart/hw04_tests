@@ -101,8 +101,8 @@ class PostPagesTests(TestCase):
         ))
 
     def check_context_contains_page(self, context):
-        self.assertIn('posts:index', context)
-        post = context['posts:index'][0]
+        self.assertIn('page_obj', context)
+        post = context['page_obj'][0]
         self.assertEqual(post.author, PostPagesTests.user)
         self.assertEqual(post.text, 'Тестовый текст')
         self.assertEqual(post.username, 'auth')
