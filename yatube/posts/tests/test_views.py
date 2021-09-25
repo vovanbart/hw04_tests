@@ -51,7 +51,7 @@ class PostPagesTests(TestCase):
     def test_index_list_page_show_correct_context(self):
         """Шаблон index сформирован с правильным контекстом."""
         response = self.authorized_client.get(reverse('posts:index'))
-        self.check_context_contains_page(response.context)
+        self.check_context_contains_page('posts:index', response.context)
 
     def test_post_on_the_home_page(self):
         """ Тест на появление поста на главной странице после создания """
